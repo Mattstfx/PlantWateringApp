@@ -3,91 +3,72 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>YourStartup</title>
-  <meta name="description" content="A student startup prototype for BSAD 281.">
+  <title>Sprout | Plant care</title>
+  <meta name="description" content="A simple plant watering tracker that puts the plants needing care first.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- =========================================================
-       HEADER: logo text + navigation.
-       Each link points to a "view" further down the page (#home, #explore, #about).
-       ========================================================= -->
   <header class="site-header">
-    <a class="brand" href="#home" id="brand-name">YourStartup</a>
-    <nav aria-label="Main">
-      <a href="#home">Home</a>
-      <a href="#explore">Explore</a>
-      <a href="#about">About</a>
-    </nav>
+    <a class="brand" href="#home" id="brand-name"><span class="brand-mark" aria-hidden="true">S</span> Sprout</a>
+    <p class="header-note">Your little corner of green</p>
   </header>
 
   <main>
-
-    <!-- =======================================================
-         VIEW 1: HOME — what you do, for whom, and why it matters.
-         ======================================================= -->
-    <section id="home" data-view>
-      <div class="hero">
-        <p class="eyebrow">Prototype</p>
-        <h1 id="tagline">One sentence that says what your startup does.</h1>
-        <p class="lead" id="pitch">
-          Who is your customer, what problem do they have, and why is your
-          solution better than what they use today?
-        </p>
-        <a class="button" href="#explore">See it in action</a>
+    <section class="dashboard" id="home">
+      <div class="intro">
+        <div>
+          <p class="eyebrow">Your plant dashboard</p>
+          <h1 id="tagline">A calmer way to keep your plants thriving.</h1>
+          <p class="lead" id="pitch">Keep every plant's watering rhythm in one place.</p>
+        </div>
+        <div class="today-mark"><span class="today-dot" aria-hidden="true"></span><span id="today-label"></span></div>
       </div>
 
-      <div class="steps">
-        <div class="card">
-          <h2>1. Step one</h2>
-          <p>Describe the first thing a customer does.</p>
+      <section class="care-summary" aria-label="Watering summary">
+        <div class="summary-copy">
+          <p class="eyebrow">Care check</p>
+          <h2 id="summary-title">You're all caught up.</h2>
+          <p id="summary-detail">Your plants are on their way to happy.</p>
         </div>
-        <div class="card">
-          <h2>2. Step two</h2>
-          <p>Describe what happens next.</p>
+        <div class="summary-count" aria-live="polite"><span id="due-count">0</span><span>need water</span></div>
+      </section>
+
+      <section class="plant-section" aria-labelledby="plants-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">The collection</p>
+            <h2 id="plants-heading">Your plants <span class="plant-total" id="plant-total">0</span></h2>
+          </div>
+          <button class="button add-toggle" id="add-toggle" type="button" aria-expanded="false" aria-controls="plant-form"><span aria-hidden="true">+</span> Add a plant</button>
         </div>
-        <div class="card">
-          <h2>3. Step three</h2>
-          <p>Describe the result the customer gets.</p>
+
+        <form class="plant-form" id="plant-form" hidden>
+          <div class="form-heading">
+            <h3>Add to your collection</h3>
+            <p>Set a reminder rhythm that suits this plant.</p>
+          </div>
+          <label>Plant name<input name="name" type="text" maxlength="50" placeholder="e.g. Monstera" required></label>
+          <label>Water every<input name="interval" type="number" min="1" max="120" value="7" required><span class="input-suffix">days</span></label>
+          <label>Last watered<input name="lastWatered" type="date" required></label>
+          <button class="button" type="submit">Add plant</button>
+        </form>
+
+        <div class="plant-list" id="plant-list" aria-live="polite"></div>
+        <div class="empty-state" id="empty-state" hidden>
+          <span class="empty-leaf" aria-hidden="true">✳</span>
+          <h3>A fresh start</h3>
+          <p>Add your first plant and we'll help keep its watering on track.</p>
         </div>
-      </div>
-    </section>
-
-    <!-- =======================================================
-         VIEW 2: EXPLORE — a list built from the fake data in data.js.
-         ======================================================= -->
-    <section id="explore" data-view hidden>
-      <h1>Explore</h1>
-      <p class="muted">These examples are fake. They come from <code>data.js</code>.</p>
-
-      <label class="search">
-        <span>Search</span>
-        <input type="search" id="search-box" placeholder="Type to filter…">
-      </label>
-
-      <p class="muted" id="saved-count"></p>
-      <div class="grid" id="listing-grid"></div>
-      <p class="empty" id="empty-message" hidden>Nothing matches your search.</p>
-    </section>
-
-    <!-- =======================================================
-         VIEW 3: ABOUT — your team and your story.
-         ======================================================= -->
-    <section id="about" data-view hidden>
-      <h1>About us</h1>
-      <p>Tell the story of why your team started this company.</p>
-      <p>Use first names only, or no names at all — this site is public.</p>
+      </section>
     </section>
 
   </main>
 
-  <!-- Keep this footer. Your site must say it is a student project. -->
   <footer class="site-footer">
-    <p>Student prototype for BSAD 281 at St. Francis Xavier University. Not a real company — all data is fictional.</p>
+    <p>Sprout is a student prototype for BSAD 281 at St. Francis Xavier University. Plant details stay in this browser.</p>
   </footer>
 
-  <!-- Scripts load in this order: data first, then the code that uses it. -->
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>

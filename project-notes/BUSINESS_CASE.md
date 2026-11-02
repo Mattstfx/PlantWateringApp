@@ -9,6 +9,12 @@ Your prototype shows *what* the product looks like. This document explains *why*
 - **Solution:** What does your product do differently or better?
 - **Revenue:** How does the company make money?
 
+### Initial recommendation
+
+Start with a free, useful watering tracker and test whether plant owners return to it. Avoid display ads in the first version: they interrupt a calm care routine, require substantial traffic to earn much, and can undermine trust before the product has earned it. A better first revenue experiment is a paid upgrade for multiple collections, shared household care, vacation schedules, and exportable plant-care notes.
+
+A local plant-sitter matching and booking service could become a later revenue stream, with a fee or commission on completed bookings. It has stronger marketplace potential because more local sitters improve availability for plant owners, and more owners make the service worthwhile for sitters. It is also much harder to operate: the company would need local supply, identity and reference checks, clear cancellation and damage policies, secure messaging, payments, and support. Validate demand with a small local pilot before building it; this prototype does not arrange real bookings.
+
 ## 2. Where IT creates value
 
 Which parts of the value chain does your product change, and how? Which course concepts apply (e.g. scale, distribution channels, differentiation, data, switching costs)?
