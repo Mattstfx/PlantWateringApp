@@ -43,6 +43,22 @@
   const plantForm = document.getElementById("plant-form");
   const addToggle = document.getElementById("add-toggle");
   const emptyState = document.getElementById("empty-state");
+  const plantType = document.getElementById("plant-type");
+  const customNameField = document.getElementById("custom-name-field");
+  const customName = plantForm.elements.customName;
+  const intervalInput = plantForm.elements.interval;
+  const wateringGuide = document.getElementById("watering-guide");
+
+  PLANT_GUIDES.forEach(function (guide) {
+    const option = document.createElement("option");
+    option.value = guide.id;
+    option.textContent = guide.name + " (about every " + guide.interval + " days)";
+    plantType.appendChild(option);
+  });
+  const customOption = document.createElement("option");
+  customOption.value = "custom";
+  customOption.textContent = "Custom plant";
+  plantType.appendChild(customOption);
 
   function localDate(dateString) {
     const parts = dateString.split("-").map(Number);
@@ -69,6 +85,7 @@
 
   function makePlantCard(plant) {
     const days = daysUntilWatering(plant);
+    const guide = PLANT_GUIDES.find(function (item) { return item.name === plant.name; });
     const card = document.createElement("article");
     card.className = "plant-row" + (days <= 0 ? " needs-water" : "");
 
@@ -80,10 +97,89 @@
     const details = document.createElement("div");
     details.className = "plant-details";
     const name = document.createElement("h3");
-    name.textContent = plant.name;
+    const nameButton = document.createElement("button");
+    nameButton.type = "button";
+    nameButton.className = "plant-name-trigger";
+    nameButton.textContent = plant.name;
+    nameButton.setAttribute("aria-expanded", "false");
+    nameButton.setAttribute("aria-controls", "plant-preview-" + plant.id);
+    nameButton.setAttribute("aria-label", "Show photo and care details for " + plant.name);
+    name.appendChild(nameButton);
+
+    const preview = document.createElement("div");
+    preview.className = "plant-preview";
+    preview.id = "plant-preview-" + plant.id;
+    preview.setAttribute("role", "group");
+    preview.setAttribute("aria-label", plant.name + " care and photo details");
+    if (guide) {
+      const image = document.createElement("img");
+      image.src = guide.image;
+      image.alt = guide.name;
+      image.loading = "lazy";
+
+      const previewBody = document.createElement("div");
+      previewBody.className = "plant-preview-body";
+      const scientificName = document.createElement("p");
+      scientificName.className = "scientific-name";
+      scientificName.textContent = guide.scientificName;
+
+      const careFacts = document.createElement("dl");
+      careFacts.className = "preview-facts";
+      const scheduleTerm = document.createElement("dt");
+      scheduleTerm.textContent = "Your schedule";
+      const scheduleValue = document.createElement("dd");
+      scheduleValue.textContent = "Every " + plant.interval + " days";
+      const lightTerm = document.createElement("dt");
+      lightTerm.textContent = "Light";
+      const lightValue = document.createElement("dd");
+      lightValue.textContent = guide.light;
+      careFacts.append(scheduleTerm, scheduleValue, lightTerm, lightValue);
+
+      const careTip = document.createElement("p");
+      careTip.className = "preview-tip";
+      careTip.textContent = guide.tip;
+
+      const photoSource = document.createElement("a");
+      photoSource.className = "photo-source";
+      photoSource.href = guide.imageSource;
+      photoSource.target = "_blank";
+      photoSource.rel = "noopener noreferrer";
+      photoSource.textContent = "Photo: " + guide.imageCredit + " · View source";
+
+      previewBody.append(scientificName, careFacts, careTip, photoSource);
+      preview.append(image, previewBody);
+    } else {
+      const noGuide = document.createElement("p");
+      noGuide.className = "no-photo-guide";
+      noGuide.textContent = "No photo guide is available for this custom plant yet.";
+      preview.appendChild(noGuide);
+    }
+    nameButton.addEventListener("click", function () {
+      const isOpen = details.classList.toggle("is-open");
+      card.classList.toggle("previewing", isOpen);
+      nameButton.setAttribute("aria-expanded", String(isOpen));
+    });
+    details.addEventListener("mouseenter", function () {
+      card.classList.add("previewing");
+    });
+    details.addEventListener("mouseleave", function () {
+      if (!details.classList.contains("is-open") && !details.contains(document.activeElement)) {
+        card.classList.remove("previewing");
+      }
+    });
+    details.addEventListener("focusin", function () {
+      card.classList.add("previewing");
+    });
+    details.addEventListener("focusout", function (event) {
+      if (!details.contains(event.relatedTarget) && !details.classList.contains("is-open")) {
+        card.classList.remove("previewing");
+      }
+    });
+
     const rhythm = document.createElement("p");
+    rhythm.className = "plant-rhythm";
     rhythm.textContent = "Every " + plant.interval + " days · Last watered " + localDate(plant.lastWatered).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-    details.append(name, rhythm);
+    details.append(name, preview, rhythm);
 
     const status = document.createElement("span");
     status.className = "due-status" + (days < 0 ? " overdue" : days === 0 ? " due-today" : " upcoming");
@@ -144,23 +240,42 @@
     const isExpanded = addToggle.getAttribute("aria-expanded") === "true";
     addToggle.setAttribute("aria-expanded", String(!isExpanded));
     plantForm.hidden = isExpanded;
-    if (!isExpanded) plantForm.elements.name.focus();
+    if (!isExpanded) plantType.focus();
+  });
+
+  plantType.addEventListener("change", function () {
+    const guide = PLANT_GUIDES.find(function (item) { return item.id === plantType.value; });
+    const isCustom = plantType.value === "custom";
+    customNameField.hidden = !isCustom;
+    customName.required = isCustom;
+    if (guide) {
+      intervalInput.value = guide.interval;
+      wateringGuide.textContent = guide.tip + " Schedule is a starting point; check the soil.";
+    } else if (isCustom) {
+      wateringGuide.textContent = "Choose an interval based on your plant and check the soil before watering.";
+    } else {
+      wateringGuide.textContent = "Choose a plant to see its suggested schedule.";
+    }
   });
 
   plantForm.elements.lastWatered.value = dateKey(new Date());
   plantForm.addEventListener("submit", function (event) {
     event.preventDefault();
     const formData = new FormData(plantForm);
+    const guide = PLANT_GUIDES.find(function (item) { return item.id === formData.get("plantType"); });
     plants.push({
       id: String(Date.now()) + String(Math.random()).slice(2),
-      name: formData.get("name").trim(),
+      name: guide ? guide.name : formData.get("customName").trim(),
       interval: Number(formData.get("interval")),
       lastWatered: formData.get("lastWatered")
     });
     savePlants();
     plantForm.reset();
-    plantForm.elements.interval.value = "7";
+    intervalInput.value = "7";
     plantForm.elements.lastWatered.value = dateKey(new Date());
+    customNameField.hidden = true;
+    customName.required = false;
+    wateringGuide.textContent = "Choose a plant to see its suggested schedule.";
     plantForm.hidden = true;
     addToggle.setAttribute("aria-expanded", "false");
     addToggle.focus();

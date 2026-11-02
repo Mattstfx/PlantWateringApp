@@ -46,10 +46,11 @@
         <form class="plant-form" id="plant-form" hidden>
           <div class="form-heading">
             <h3>Add to your collection</h3>
-            <p>Set a reminder rhythm that suits this plant.</p>
+            <p>Start with a care guide, then adjust it to your home.</p>
           </div>
-          <label>Plant name<input name="name" type="text" maxlength="50" placeholder="e.g. Monstera" required></label>
-          <label>Water every<input name="interval" type="number" min="1" max="120" value="7" required><span class="input-suffix">days</span></label>
+          <label>Plant type<select name="plantType" id="plant-type" required><option value="">Choose a plant</option></select></label>
+          <label id="custom-name-field" hidden>Plant name<input name="customName" type="text" maxlength="50" placeholder="e.g. My leafy friend"></label>
+          <label class="interval-field">Water every<input name="interval" type="number" min="1" max="120" value="7" required><span class="input-suffix">days</span><span class="watering-guide" id="watering-guide" aria-live="polite">Choose a plant to see its suggested schedule.</span></label>
           <label>Last watered<input name="lastWatered" type="date" required></label>
           <button class="button" type="submit">Add plant</button>
         </form>

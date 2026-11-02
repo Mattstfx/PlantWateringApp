@@ -117,12 +117,29 @@ h1, h2, h3 { line-height: 1.2; }
 .add-toggle span { font-size: 1.25rem; line-height: 0.8; }
 .plant-list { border-top: 1px solid var(--border); }
 .plant-row { display: grid; grid-template-columns: 48px minmax(150px, 1fr) minmax(120px, auto) auto; align-items: center; gap: 18px; padding: 17px 8px; border-bottom: 1px solid var(--border); animation: arrive 300ms ease both; }
+.plant-row.previewing { position: relative; z-index: 6; }
 .plant-row.needs-water { background: linear-gradient(90deg, rgba(255,255,255,.72), transparent); }
 .plant-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50% 50% 50% 10px; color: #96503b; background: #f2e4dc; font-family: Georgia, "Times New Roman", serif; font-size: 1.1rem; }
 .plant-row:nth-child(3n + 2) .plant-icon { color: #586d78; background: #e4ebed; }
 .plant-row:nth-child(3n) .plant-icon { color: #9a6d2f; background: #f2ead9; }
+.plant-details { position: relative; min-width: 0; }
 .plant-details h3 { margin: 0 0 4px; font-size: 1rem; }
-.plant-details p { margin: 0; color: var(--muted); font-size: 0.87rem; }
+.plant-name-trigger { padding: 0; border: 0; color: var(--text); background: transparent; font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
+.plant-name-trigger:hover { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+.plant-name-trigger:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 2px; }
+.plant-preview { position: absolute; z-index: 5; top: calc(100% + 10px); left: 0; width: min(320px, calc(100vw - 32px)); overflow: hidden; color: var(--text); background: #fff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 14px 36px rgba(34, 45, 50, .2); opacity: 0; pointer-events: none; transform: translateY(5px); transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease; visibility: hidden; }
+.plant-details:hover .plant-preview, .plant-details:focus-within .plant-preview, .plant-details.is-open .plant-preview { opacity: 1; pointer-events: auto; transform: translateY(0); visibility: visible; }
+.plant-preview > img { display: block; width: 100%; height: 156px; object-fit: cover; background: #e8eef0; }
+.plant-preview-body { padding: 13px 15px 14px; }
+.scientific-name { margin: 0 0 10px; color: var(--muted); font-family: Georgia, "Times New Roman", serif; font-size: .9rem; font-style: italic; }
+.preview-facts { display: grid; grid-template-columns: 105px 1fr; gap: 5px 8px; margin: 0; font-size: .82rem; }
+.preview-facts dt { color: var(--muted); }
+.preview-facts dd { margin: 0; font-weight: 600; }
+.preview-tip { margin: 11px 0 9px; font-size: .84rem; line-height: 1.4; }
+.photo-source { color: var(--muted); font-size: .7rem; text-decoration-color: #b6bdbe; text-underline-offset: 2px; }
+.photo-source:hover { color: var(--brand); }
+.no-photo-guide { margin: 0; padding: 16px; color: var(--muted); font-size: .85rem; }
+.plant-rhythm { margin: 0; color: var(--muted); font-size: 0.87rem; }
 .due-status { color: #697579; font-size: 0.9rem; }
 .due-status.overdue { color: #a64e3d; font-weight: 700; }
 .due-status.due-today { color: #a16d25; font-weight: 700; }
@@ -136,7 +153,9 @@ h1, h2, h3 { line-height: 1.2; }
 .form-heading h3 { margin: 0 0 4px; font-size: 1.05rem; }
 .form-heading p { margin: 0; color: var(--muted); font-size: .9rem; }
 .plant-form label { position: relative; display: grid; gap: 6px; color: var(--text); font-size: .86rem; font-weight: 600; }
-.plant-form input { width: 100%; min-width: 0; padding: 10px 11px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; color: var(--text); font: inherit; font-weight: 400; }
+.plant-form input, .plant-form select { width: 100%; min-width: 0; padding: 10px 11px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; color: var(--text); font: inherit; font-weight: 400; }
+.plant-form [hidden] { display: none; }
+.watering-guide { min-height: 2.4em; color: var(--muted); font-size: .75rem; font-weight: 400; line-height: 1.35; }
 .plant-form .button { min-height: 42px; white-space: nowrap; }
 .input-suffix { position: absolute; right: 12px; bottom: 11px; color: var(--muted); font-size: .8rem; font-weight: 400; }
 .empty-state { padding: 48px 20px; text-align: center; border: 1px dashed #cdd3d2; border-radius: var(--radius); }
@@ -169,7 +188,8 @@ h1, h2, h3 { line-height: 1.2; }
   .section-heading h2 { font-size: 1.55rem; }
   .plant-row { grid-template-columns: 42px minmax(0, 1fr) auto; gap: 10px; padding: 14px 2px; }
   .plant-icon { width: 38px; height: 38px; }
-  .plant-details p { font-size: .8rem; }
+  .plant-rhythm { font-size: .8rem; }
+  .plant-preview { left: -48px; }
   .due-status { grid-column: 2; grid-row: 2; font-size: .82rem; }
   .plant-actions { grid-column: 3; grid-row: 1 / span 2; flex-direction: column; align-items: end; gap: 4px; }
   .remove-button { padding: 4px 0 4px 8px; }
